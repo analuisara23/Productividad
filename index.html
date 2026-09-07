@@ -51,12 +51,12 @@
   .section-title { font-size:1.25rem; font-weight:700; color:var(--navy); margin-bottom:.3rem; }
   .section-desc { font-size:13px; color:var(--text-sub); }
 
-  .ind-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1rem; }
+  .ind-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
 
   .ind-card { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:1.25rem; transition:box-shadow .2s,transform .2s; position:relative; overflow:hidden; }
   .ind-card::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--accent); border-radius:10px 0 0 10px; }
   .ind-card.nuevo::before { background:var(--green); }
-  .ind-card.alerta::before { background:var(--amber); }
+  .ind-card.alerta::before { background:var(--amber) !important; } .ind-card.alerta { border-left-color: var(--amber) !important; }
   .ind-card:hover { box-shadow:0 4px 20px rgba(13,27,42,.08); transform:translateY(-2px); }
 
   .card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:.75rem; gap:.5rem; }
@@ -81,7 +81,7 @@
   .banner { border-radius:8px; padding:.9rem 1.2rem; margin-bottom:1.5rem; font-size:13px; font-weight:500; }
   .banner-green { background:linear-gradient(90deg,var(--green-bg),var(--white)); border:1px solid #A8D5C8; border-left:4px solid var(--green); color:var(--green); }
 
-  @media(max-width:640px){ .header-title{font-size:1.4rem;} .ind-grid{grid-template-columns:1fr;} }
+  @media(max-width:900px){ .ind-grid{grid-template-columns:repeat(2,1fr);} } @media(max-width:600px){ .header-title{font-size:1.4rem;} .ind-grid{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -102,10 +102,9 @@
 <div class="nav-wrap">
   <div class="nav-inner">
     <button class="tab-btn active" onclick="switchTab('comercial',this)">Comercial <span class="tab-count">9</span></button>
-    <button class="tab-btn" onclick="switchTab('financiero',this)">Financiero <span class="tab-count">3</span></button>
-    <button class="tab-btn" onclick="switchTab('productividad',this)">Productividad <span class="tab-count">6</span></button>
+    <button class="tab-btn" onclick="switchTab('financiero',this)">Financiero <span class="tab-count">5</span></button>
+    <button class="tab-btn" onclick="switchTab('productividad',this)">Productividad <span class="tab-count">8</span></button>
     <button class="tab-btn" onclick="switchTab('eficiencia',this)">Eficiencia <span class="tab-count">2</span></button>
-    <button class="tab-btn" onclick="switchTab('rentabilidad',this)">Rentabilidad <span class="tab-count">4</span></button>
   </div>
 </div>
 
@@ -124,99 +123,72 @@
     <div class="ind-card">
       <div class="card-top"><div class="ind-name">Cartera</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
       <p class="ind-desc">Saldo total de capital vigente. Mide el tamaño absoluto del negocio al cierre del mes.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">Cartera = Σ Saldo de Capital Vigente</div>
-      </div>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">Cartera = Σ Saldo de Capital Vigente</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">IMPORTE_SALDO_CAPITAL</span><span class="col-tag">FECHA_EXTRACCION</span></div></div>
     </div>
 
     <div class="ind-card">
       <div class="card-top"><div class="ind-name">Contratos Vigentes</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
       <p class="ind-desc">Total de contratos activos al cierre del mes. Refleja la base de clientes operativa.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">Contratos Vigentes = N° Contratos con Estado Vigente</div>
-      </div>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">Contratos Vigentes = N° Contratos con Estado Vigente</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">NUMERO_CONTRATO</span><span class="col-tag">STATUS_DENOMINACION</span></div></div>
     </div>
 
     <div class="ind-card">
       <div class="card-top"><div class="ind-name">Solicitudes</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
       <p class="ind-desc">Total de solicitudes recibidas en el mes. Representa la demanda del mercado y el pipeline comercial.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">Solicitudes = N° Solicitudes Recibidas en el Mes</div>
-      </div>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">Solicitudes = N° Solicitudes Recibidas en el Mes</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">NUMERO_CONTRATO</span><span class="col-tag">FECHA_ENTRADA_SOLICITUD</span></div></div>
     </div>
 
     <div class="ind-card">
       <div class="card-top"><div class="ind-name">Contratos Colocados</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
       <p class="ind-desc">Créditos desembolsados en el mes. Mide la producción comercial efectiva del período.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">Contratos Colocados = N° Contratos Desembolsados en el Mes</div>
-      </div>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">Contratos Colocados = N° Contratos Desembolsados en el Mes</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">NUMERO_CONTRATO</span><span class="col-tag">FECHA_LIQUIDACION_CONTRATO</span></div></div>
     </div>
 
     <div class="ind-card">
       <div class="card-top"><div class="ind-name">Tasa de Conversión</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
       <p class="ind-desc">Porcentaje de solicitudes que se convierten en contratos colocados. Indicador de eficiencia del proceso comercial.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">Tasa de Conversión = Contratos Colocados / Solicitudes × 100</div>
-      </div>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">Tasa de Conversión = Contratos Colocados / Solicitudes × 100</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">Calculado</span></div></div>
     </div>
 
     <div class="ind-card">
       <div class="card-top"><div class="ind-name">Ticket Promedio</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
       <p class="ind-desc">Monto promedio por contrato vigente. Refleja el tamaño típico de la operación y la segmentación de clientes.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">Ticket Promedio = Cartera / Contratos Vigentes</div>
-      </div>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">Ticket Promedio = Cartera / Contratos Vigentes</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">Calculado</span></div></div>
     </div>
 
     <div class="ind-card alerta">
-      <div class="card-top"><div class="ind-name">PAR1 — Mora &gt; 1 Día</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
-      <p class="ind-desc">Porcentaje de cartera con al menos 1 día de atraso. Alerta temprana — primer señal de deterioro de la calidad de pago.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">PAR1 = Saldo en Mora &gt; 1 Día / Cartera Total × 100</div>
-      </div>
+      <div class="card-top"><div class="ind-name">PAR60 — Mora &gt; 60 Días</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
+      <p class="ind-desc">Porcentaje de cartera con más de 60 días de atraso. Señal de deterioro avanzado — alta probabilidad de no recuperación sin gestión activa.</p>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">PAR60 = Saldo en Mora &gt; 60 Días / Cartera Total × 100</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">IMPORTE_VENCIDO_CAPITAL</span><span class="col-tag">MORA</span><span class="col-tag">IMPORTE_SALDO_CAPITAL</span></div></div>
     </div>
 
     <div class="ind-card alerta">
-      <div class="card-top"><div class="ind-name">PAR30 — Mora &gt; 30 Días</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
-      <p class="ind-desc">Porcentaje de cartera con más de 30 días de atraso. Indicador de gestión intermedio entre alerta temprana y mora estructural.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">PAR30 = Saldo en Mora &gt; 30 Días / Cartera Total × 100</div>
-      </div>
+      <div class="card-top"><div class="ind-name">PAR91-179 — Mora 91 a 179 Días</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
+      <p class="ind-desc">Porcentaje de cartera entre 91 y 179 días de mora. Zona crítica — cartera en deterioro severo antes de alcanzar mora estructural definitiva.</p>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">PAR91-179 = Saldo en Mora entre 91 y 179 Días / Cartera Total × 100</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">IMPORTE_VENCIDO_CAPITAL</span><span class="col-tag">MORA</span><span class="col-tag">IMPORTE_SALDO_CAPITAL</span></div></div>
     </div>
 
-    <div class="ind-card">
-      <div class="card-top"><div class="ind-name">%90+ — Mora Estructural</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
-      <p class="ind-desc">Porcentaje de cartera con más de 90 días de mora. Indicador estratégico crítico — señala pérdida prácticamente irrecuperable.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">%90+ = Saldo en Mora ≥ 90 Días / Cartera Total × 100</div>
-      </div>
+    <div class="ind-card alerta">
+      <div class="card-top"><div class="ind-name">PAR180+ — Mora 180 Días o Más</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
+      <p class="ind-desc">Porcentaje de cartera con 180 días o más de mora. Pérdida prácticamente irrecuperable — base para decisiones de castigo y política de provisiones.</p>
+      <div class="formula-box"><div class="formula-label">Fórmula</div><div class="formula-text">PAR180+ = Saldo en Mora ≥ 180 Días / Cartera Total × 100</div></div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">IMPORTE_VENCIDO_CAPITAL</span><span class="col-tag">MORA</span><span class="col-tag">IMPORTE_SALDO_CAPITAL</span></div></div>
     </div>
 
   </div>
 </div>
 
-<!-- ══════════════════════════════════════ -->
-<!-- TAB 2: FINANCIERO                     -->
-<!-- ══════════════════════════════════════ -->
+
+</div>
+
 <div id="tab-financiero" class="tab-panel">
   <div class="section-header">
     <div class="section-title">Bloque Financiero</div>
@@ -252,6 +224,27 @@
         <div class="formula-text">CoC = Constitución de Reserva / ((Saldo Inicio de Mes + Saldo Fin de Mes) / 2)</div>
       </div>
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">IMPORTE_SALDO_CAPITAL</span><span class="col-tag">Reserva Total</span></div></div>
+    </div>
+
+
+    <div class="ind-card nuevo">
+      <div class="card-top"><div class="ind-name">Margen Operativo por Contrato</div><div class="badges"><span class="badge badge-nuevo">Nuevo</span><span class="badge badge-ds">DS</span></div></div>
+      <p class="ind-desc">Rentabilidad neta promedio por contrato vigente. Indica si el negocio crea o destruye valor en cada operación activa.</p>
+      <div class="formula-box">
+        <div class="formula-label">Fórmula</div>
+        <div class="formula-text">Margen por Contrato = (Ingresos Totales − Gastos Operativos − Costo de Crédito) / Contratos Vigentes</div>
+      </div>
+      <div class="source-row"><span class="source-label">Deriva de</span><div class="source-cols"><span class="col-tag">Ingresos Totales</span><span class="col-tag">Gastos Op. [Sistema]</span><span class="col-tag">CoC calculado</span></div></div>
+    </div>
+
+    <div class="ind-card nuevo">
+      <div class="card-top"><div class="ind-name">Cobertura de Reserva</div><div class="badges"><span class="badge badge-nuevo">Nuevo</span><span class="badge badge-ds">DS</span></div></div>
+      <p class="ind-desc">Cuántas veces cubre la reserva constituida la cartera en mora estructural (≥ 90 días). Mide si la provisión es suficiente para absorber las pérdidas críticas.</p>
+      <div class="formula-box">
+        <div class="formula-label">Fórmula</div>
+        <div class="formula-text">Cobertura de Reserva = Reserva Requerida / Cartera en Mora ≥ 90 Días</div>
+      </div>
+      <div class="source-row"><span class="source-label">Deriva de</span><div class="source-cols"><span class="col-tag">Reserva Requerida</span><span class="col-tag">IMPORTE_VENCIDO_CAPITAL</span><span class="col-tag">MORA</span></div></div>
     </div>
 
   </div>
@@ -327,6 +320,27 @@
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">Calculado</span></div></div>
     </div>
 
+
+    <div class="ind-card">
+      <div class="card-top"><div class="ind-name">Contratos en Mora / Headcount Cobros</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
+      <p class="ind-desc">Contratos en mora asignados por cada colaborador del área de cobros. Mide la carga de gestión de cobranza por persona.</p>
+      <div class="formula-box">
+        <div class="formula-label">Fórmula</div>
+        <div class="formula-text">Contratos en Mora / Headcount Cobros = Contratos con Mora &gt; 0 / N° Colaboradores Activos en Cobros</div>
+      </div>
+      <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">NUMERO_CONTRATO</span><span class="col-tag">MORA</span><span class="col-tag">centro_costo = COBROS [RH]</span></div></div>
+    </div>
+
+    <div class="ind-card">
+      <div class="card-top"><div class="ind-name">Solicitudes de Crédito / Headcount Créditos</div><div class="badges"><span class="badge badge-bi">BI</span></div></div>
+      <p class="ind-desc">Solicitudes recibidas en el mes por cada colaborador del área de créditos, filtrado por cargo. Mide la productividad de análisis y aprobación del equipo de crédito.</p>
+      <div class="formula-box">
+        <div class="formula-label">Fórmula</div>
+        <div class="formula-text">Solicitudes / Headcount Créditos = Solicitudes del Mes / N° Colaboradores Activos en Créditos (filtrado por cargo)</div>
+      </div>
+      <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">FECHA_ENTRADA_SOLICITUD</span><span class="col-tag">centro_costo = CRÉDITOS [RH]</span><span class="col-tag">cargo [RH]</span></div></div>
+    </div>
+
   </div>
 </div>
 
@@ -360,65 +374,11 @@
       <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">Calculado</span></div></div>
     </div>
 
+
   </div>
 </div>
 
-<!-- ══════════════════════════════════════ -->
-<!-- TAB 5: RENTABILIDAD                   -->
-<!-- ══════════════════════════════════════ -->
-<div id="tab-rentabilidad" class="tab-panel">
-  <div class="section-header">
-    <div class="section-title">Bloque Rentabilidad</div>
-    <div class="section-desc">Indicadores nuevos — actualmente no existen en el modelo</div>
-  </div>
-  <div class="banner banner-green">★ <strong>Crítico:</strong> Estos indicadores no existen hoy. Sin ellos no es posible saber si cada contrato genera o destruye valor.</div>
-  <div class="ind-grid">
-
-    <div class="ind-card nuevo">
-      <div class="card-top"><div class="ind-name">Margen Operativo por Contrato</div><div class="badges"><span class="badge badge-nuevo">Nuevo</span><span class="badge badge-ds">DS</span></div></div>
-      <p class="ind-desc">Rentabilidad neta promedio por contrato vigente. Indica si el negocio crea o destruye valor en cada operación activa.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">Margen por Contrato = (Ingresos Totales − Gastos Operativos − Costo de Crédito) / Contratos Vigentes</div>
-      </div>
-      <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">Ingresos Totales</span><span class="col-tag">Gastos Op. [Sistema]</span><span class="col-tag">CoC calculado</span></div></div>
-    </div>
-
-    <div class="ind-card nuevo">
-      <div class="card-top"><div class="ind-name">CAC — Costo de Adquisición</div><div class="badges"><span class="badge badge-nuevo">Nuevo</span><span class="badge badge-ds">DS</span></div></div>
-      <p class="ind-desc">Inversión en comercial y mercadeo por cada contrato colocado. Hoy no se mide — clave para evaluar la rentabilidad de la colocación nueva.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">CAC = (Gasto Comercial + Gasto Mercadeo) / Contratos Colocados</div>
-      </div>
-      <div class="source-row"><span class="source-label">Columna</span><div class="source-cols"><span class="col-tag">monto_gasto [Gastos]</span><span class="col-tag">centro_costo [Gastos]</span></div></div>
-    </div>
-
-    <div class="ind-card nuevo">
-      <div class="card-top"><div class="ind-name">CAC Payback</div><div class="badges"><span class="badge badge-nuevo">Nuevo</span><span class="badge badge-ds">DS</span></div></div>
-      <p class="ind-desc">Meses necesarios para que los ingresos generados por un contrato recuperen lo que costó conseguirlo. Depende directamente del CAC calculado previamente.</p>
-      <div class="formula-box">
-        <div class="formula-label">Paso 1 — Se requiere primero</div>
-        <div class="formula-text">CAC = (Gasto Comercial + Gasto Mercadeo) / Contratos Colocados</div>
-      </div>
-      <div class="formula-box" style="margin-top:.5rem; background:#162A40;">
-        <div class="formula-label">Paso 2 — Cálculo final</div>
-        <div class="formula-text">CAC Payback = CAC / (Ingresos Totales / Contratos Vigentes)</div>
-      </div>
-      <div class="source-row"><span class="source-label">Deriva de</span><div class="source-cols"><span class="col-tag">CAC (indicador anterior)</span><span class="col-tag">Ingresos Totales</span><span class="col-tag">Contratos Vigentes</span></div></div>
-    </div>
-
-        <div class="ind-card nuevo">
-      <div class="card-top"><div class="ind-name">Cobertura de Reserva</div><div class="badges"><span class="badge badge-nuevo">Nuevo</span><span class="badge badge-ds">DS</span></div></div>
-      <p class="ind-desc">Cuántas veces cubre la reserva constituida la cartera en mora estructural (≥ 90 días). Mide si la provisión es suficiente para absorber las pérdidas críticas.</p>
-      <div class="formula-box">
-        <div class="formula-label">Fórmula</div>
-        <div class="formula-text">Cobertura de Reserva = Reserva Requerida / Cartera en Mora ≥ 90 Días</div>
-      </div>
-      <div class="source-row"><span class="source-label">Deriva de</span><div class="source-cols"><span class="col-tag">Reserva Requerida</span><span class="col-tag">IMPORTE_VENCIDO_CAPITAL</span><span class="col-tag">MORA</span></div></div>
-    </div>
-
-  </div>
+</div></div>
 </div>
 
 </div>
