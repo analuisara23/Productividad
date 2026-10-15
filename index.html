@@ -82,6 +82,45 @@
   .banner-green { background:linear-gradient(90deg,var(--green-bg),var(--white)); border:1px solid #A8D5C8; border-left:4px solid var(--green); color:var(--green); }
 
   @media(max-width:900px){ .ind-grid{grid-template-columns:repeat(2,1fr);} } @media(max-width:600px){ .header-title{font-size:1.4rem;} .ind-grid{grid-template-columns:1fr;} }
+
+  /* ===== Seguimiento de avance ===== */
+  :root { --prog:#BA7517; --prog-bg:#FEF6E4; --done:#0F6E56; --done-bg:#E6F4F0; --pend:#8A9BB0; --pend-bg:#F1F4F8; }
+
+  .tracker { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:1rem 1.25rem; margin-bottom:1.75rem; display:flex; flex-wrap:wrap; gap:1rem 2rem; align-items:center; }
+  .tracker-main { flex:1 1 320px; min-width:260px; }
+  .tracker-top { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.5rem; }
+  .tracker-title { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-sub); }
+  .tracker-pct { font-size:1.4rem; font-weight:700; color:var(--navy); }
+  .bar { height:10px; background:var(--pend-bg); border-radius:6px; overflow:hidden; display:flex; }
+  .bar-done { background:var(--done); transition:width .3s; }
+  .bar-prog { background:var(--prog); transition:width .3s; }
+  .tracker-legend { display:flex; gap:1rem; margin-top:.55rem; font-size:12px; color:var(--text-sub); flex-wrap:wrap; }
+  .tracker-legend b { color:var(--navy); }
+  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
+  .dot-done { background:var(--done); } .dot-prog { background:var(--prog); } .dot-pend { background:var(--pend); }
+
+  .tracker-actions { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
+  .flt, .reset-btn { font-family:'Inter',sans-serif; font-size:12px; font-weight:600; padding:.45rem .85rem; border-radius:7px; border:1px solid var(--border); background:var(--off-white); color:var(--text-sub); cursor:pointer; transition:all .15s; }
+  .flt:hover, .reset-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .flt.active { background:var(--navy); border-color:var(--navy); color:var(--white); }
+  .reset-btn { background:none; }
+
+  .status-row { display:flex; align-items:center; gap:6px; margin-top:.9rem; padding-top:.8rem; border-top:1px dashed var(--border); }
+  .st-btn { flex:1; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; padding:.4rem .3rem; border-radius:6px; border:1px solid var(--border); background:var(--white); color:var(--text-muted); cursor:pointer; transition:all .15s; white-space:nowrap; }
+  .st-btn:hover { border-color:var(--text-muted); color:var(--text-sub); }
+  .st-btn.on-pend { background:var(--pend-bg); border-color:var(--pend); color:var(--text-sub); }
+  .st-btn.on-prog { background:var(--prog-bg); border-color:var(--prog); color:var(--prog); }
+  .st-btn.on-done { background:var(--done-bg); border-color:var(--done); color:var(--done); }
+
+  .ind-card.st-prog { border-color:#E8CFA0; }
+  .ind-card.st-prog::before { background:var(--prog) !important; }
+  .ind-card.st-done { border-color:#A8D5C8; background:linear-gradient(180deg,#FBFEFD,var(--white)); }
+  .ind-card.st-done::before { background:var(--done) !important; }
+  .ind-card.st-done .ind-name::after { content:' ✓'; color:var(--done); }
+  .ind-card.hidden { display:none; }
+  .empty-msg { display:none; grid-column:1/-1; text-align:center; padding:2rem; font-size:13px; color:var(--text-muted); border:1px dashed var(--border); border-radius:10px; }
+
+  .tab-count.full { background:var(--done) !important; color:#fff !important; }
 </style>
 </head>
 <body>
@@ -109,6 +148,30 @@
 </div>
 
 <div class="main">
+
+<div class="tracker" id="tracker">
+  <div class="tracker-main">
+    <div class="tracker-top">
+      <span class="tracker-title">Avance general</span>
+      <span class="tracker-pct" id="trk-pct">0%</span>
+    </div>
+    <div class="bar"><div class="bar-done" id="bar-done" style="width:0"></div><div class="bar-prog" id="bar-prog" style="width:0"></div></div>
+    <div class="tracker-legend">
+      <span><span class="dot dot-done"></span><b id="n-done">0</b> trabajados</span>
+      <span><span class="dot dot-prog"></span><b id="n-prog">0</b> en proceso</span>
+      <span><span class="dot dot-pend"></span><b id="n-pend">0</b> pendientes</span>
+      <span>de <b id="n-total">0</b> indicadores</span>
+    </div>
+  </div>
+  <div class="tracker-actions">
+    <button class="flt active" data-f="all">Todos</button>
+    <button class="flt" data-f="pend">Pendientes</button>
+    <button class="flt" data-f="prog">En proceso</button>
+    <button class="flt" data-f="done">Trabajados</button>
+    <button class="reset-btn" id="reset-btn" title="Poner todos en pendiente">Reiniciar</button>
+  </div>
+</div>
+
 
 <!-- ══════════════════════════════════════ -->
 <!-- TAB 1: COMERCIAL                      -->
@@ -383,6 +446,99 @@ function switchTab(id, btn) {
   document.getElementById('tab-' + id).classList.add('active');
   btn.classList.add('active');
 }
+</script>
+
+<script>
+(function(){
+  var KEY = 'indicadores_productividad_estado_v1';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) { state = {}; }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+
+  var LABEL = { pend:'Pendiente', prog:'En proceso', done:'Trabajado' };
+  var filter = 'all';
+  var cards = [];
+
+  document.querySelectorAll('.tab-panel').forEach(function(panel){
+    var grid = panel.querySelector('.ind-grid');
+    var empty = document.createElement('div');
+    empty.className = 'empty-msg';
+    empty.textContent = 'No hay indicadores con este estado en este bloque.';
+    grid.appendChild(empty);
+    panel._empty = empty;
+
+    panel.querySelectorAll('.ind-card').forEach(function(card){
+      var name = card.querySelector('.ind-name').textContent.trim();
+      var key = panel.id + '|' + name;
+      var row = document.createElement('div');
+      row.className = 'status-row';
+      ['pend','prog','done'].forEach(function(s){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'st-btn';
+        b.dataset.s = s;
+        b.textContent = LABEL[s];
+        b.addEventListener('click', function(){ state[key] = s; save(); render(); });
+        row.appendChild(b);
+      });
+      card.appendChild(row);
+      cards.push({ el: card, key: key, panel: panel, row: row });
+    });
+  });
+
+  function get(c){ return state[c.key] || 'pend'; }
+
+  function render(){
+    var n = { pend:0, prog:0, done:0 };
+    var perPanel = {};
+    cards.forEach(function(c){
+      var s = get(c);
+      n[s]++;
+      var p = perPanel[c.panel.id] || (perPanel[c.panel.id] = { done:0, total:0, shown:0, panel:c.panel });
+      p.total++; if (s === 'done') p.done++;
+
+      c.el.classList.remove('st-prog','st-done');
+      if (s === 'prog') c.el.classList.add('st-prog');
+      if (s === 'done') c.el.classList.add('st-done');
+      c.row.querySelectorAll('.st-btn').forEach(function(b){
+        b.className = 'st-btn' + (b.dataset.s === s ? ' on-' + s : '');
+      });
+      var visible = (filter === 'all' || filter === s);
+      c.el.classList.toggle('hidden', !visible);
+      if (visible) p.shown++;
+    });
+
+    var total = cards.length;
+    document.getElementById('n-done').textContent = n.done;
+    document.getElementById('n-prog').textContent = n.prog;
+    document.getElementById('n-pend').textContent = n.pend;
+    document.getElementById('n-total').textContent = total;
+    document.getElementById('trk-pct').textContent = (total ? Math.round(n.done / total * 100) : 0) + '%';
+    document.getElementById('bar-done').style.width = (total ? n.done / total * 100 : 0) + '%';
+    document.getElementById('bar-prog').style.width = (total ? n.prog / total * 100 : 0) + '%';
+
+    Object.keys(perPanel).forEach(function(id){
+      var p = perPanel[id];
+      p.panel._empty.style.display = p.shown === 0 ? 'block' : 'none';
+      var tab = document.querySelector('.tab-btn[onclick*="\'' + id.replace('tab-','') + '\'"] .tab-count');
+      if (tab) { tab.textContent = p.done + '/' + p.total; tab.classList.toggle('full', p.done === p.total); }
+    });
+  }
+
+  document.querySelectorAll('.flt').forEach(function(b){
+    b.addEventListener('click', function(){
+      filter = b.dataset.f;
+      document.querySelectorAll('.flt').forEach(function(x){ x.classList.toggle('active', x === b); });
+      render();
+    });
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', function(){
+    if (confirm('¿Poner todos los indicadores en Pendiente?')) { state = {}; save(); render(); }
+  });
+
+  render();
+})();
 </script>
 </body>
 </html>
